@@ -1,0 +1,32 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E265" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="Outrun.main.models.QbProjections.objects" />
+          <option value="register.views" />
+          <option value="Outrun.Outrun.signals.models" />
+          <option value="Outrun.register.models.UserProfile" />
+          <option value="register.signals" />
+          <option value="Outrun.register.signals.main" />
+          <option value="paypal.standard" />
+          <option value="pandas" />
+          <option value="Outrun.Outrun.urls.main" />
+          <option value="Outrun.main.models.django_resized" />
+          <option value="django_resized" />
+          <option value="Outrun.main.models.request" />
+          <option value="Outrun.settings" />
+          <option value="PIL.image" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
