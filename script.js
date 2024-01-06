@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', (event) =>{
 
 const getCount = () => {
     let count = 30;
-    fetch('#').then(response => {
+    fetch('https://v53zxph81c.execute-api.us-east-1.amazonaws.com/Initial/ResumeSiteCounter').then(response => {
         return response.json();
     }).then(response => {
         console.log("API Called");
