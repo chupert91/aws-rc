@@ -11927,12 +11927,6 @@ th {
   color: inherit;
 }
 
-.cert-logo {
-    width:5rem;
-    height:5rem;
-}
-
-
 
 /* Large Screens ----------------------------------------------------------------------------------------------*/
 @media only screen and (min-width: 600px) {
@@ -11994,6 +11988,7 @@ th {
         width:15%;
         text-align:center;
     }
+
 
 }
 
@@ -12100,4 +12095,5 @@ th {
         width:90%;
         text-align:center;
     }
+
 }
