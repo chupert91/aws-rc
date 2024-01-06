@@ -89,8 +89,8 @@
     <div class="diagram-container" style="background-color:#FF9900;">
       <div class="architecture" style="text-align:center; background-color:#FF9900;">
         <h3 class="arc-heading">site Architecture</h3>
-        <small class="text-body-secondary">This is an AWS S3 hosted site which uses Route 53 DNS and
-          an API Gateway trigger to invoke a Python Lambda function to retrieve and update information from DynamoDB.
+        <small class="text-body-secondary">This is an AWS S3 hosted site which uses Route 53 DNS to connect to a CloudFront distribution using TLS provided by Amazon Certificate Manager. 
+          An API Gateway trigger to invokes a Python Lambda function to retrieve and update information from DynamoDB.
         </small>
       </div>
       <div class="diagram" style="text-align:center; background-color: #000;">
