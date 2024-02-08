@@ -29,7 +29,9 @@
               <a class="dropdown-item" href="https://www.youtube.com/channel/UC_Lkq87SZ2rTUPP-RL7lTNA">YouTube</a>
               <a class="dropdown-item" href="https://github.com/chupert91">GitHub</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="https://outrunfootball.com">Outrun WebApp</a>
+              <p><small class="text-body-secondary">Temporary Links</small></p>
+              <a class="dropdown-item" href="#">Outrun WebApp</a>
+              <a class="dropdown-item" href="http://ec2-18-215-233-116.compute-1.amazonaws.com:30007">Streaming Service</a>
             </div>
           </li>
         </ul>
@@ -188,6 +190,19 @@
         Decoupled architecture with on premise Python backend using Pandas, SciKit Learn, and PyTorch. Backend analyzes data from every
         active NFL player and creates custom machine learning models to project player performances based on several factors.
         Application is also available on iOS and Android.</p>
+    </div>
+    <br/>
+    <div class="project">
+      <h3>Netflix on Kubernetes Cluster</h3>
+      <h4><small class="text-body-secondary">DevSecOps</small></h4>
+      <p>
+        Netflix clone streaming service hosted in AWS using Elastic Kubernetes Service (EKS). Using EC2 instance for development
+        and creating Docker image of the application containerization. Secondary EC2 instance was deployed with
+        SonarQube for security/vulnerability scans of the code before deployment. Additionally, Prometheus was deployed on
+        the second host for integrated monitoring of the application. Grafana is also utilized on the secondary EC2 using
+        Prometheus datasourcing for a graphical monitoring representation of the EKS cluster. Post vulnerability scan,
+        the Docker image is pushed to a dockerHub profile and to the EKS node instance using Jenkins CI/CD pipeline.
+      </p>
     </div>
     <!-- Add more project sections as needed -->
   </section>
