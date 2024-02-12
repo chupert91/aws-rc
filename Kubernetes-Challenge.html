@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Kubernetes Challenge</title>
+
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Netflix</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Home
+              <span class="visually-hidden">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="resume.html">Resume
+              <span class="visually-hidden">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Links</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="https://www.linkedin.com/in/chuckhupertii/">LinkedIn</a>
+              <a class="dropdown-item" href="https://www.youtube.com/channel/UC_Lkq87SZ2rTUPP-RL7lTNA">YouTube</a>
+              <a class="dropdown-item" href="https://github.com/chupert91">GitHub</a>
+              <div class="dropdown-divider"></div>
+              <p><small class="text-body-secondary">Temporary Links</small></p>
+              <a class="dropdown-item" href="#">Outrun WebApp</a>
+              <a class="dropdown-item" href="http://ec2-18-215-233-116.compute-1.amazonaws.com:30007">Netflix</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="diagram" style="text-align:center; background-color: #fff;">
+    <img src="images/project.jpg" style="width:90vw; height:auto;">
+  </div>
+
+  <header style="text-align:center; margin-top:5rem;">
+    <h1>Netflix Application Clone Deployed on Kubernetes</h1>
+    <h3 class="lead"></h3>
+  </header>
+
+  <section class="resume-section">
+    <h2 style="color:#908e91;">Development / Security</h2>
+    <br/>
+    <div class="job">
+      <h2>Amazon Web Services EC2</h2>
+      <h5>Ubuntu OS /<small class="text-body-secondary">T5.Large 25GiB gp2</small></h5>
+      <h5>App Development Server</h5>
+      <br/>
+      <ul style="list-style-type:none;">
+        <li>
+          <h5>Step 1: Launching an AWS EC2 Instance</h5>
+          <ul style="list-style-type:none;">
+            <li>Log in to the AWS Management Console and navigate to the EC2 dashboard.</li>
+            <li>Click on the "Launch Instance" button and select an Ubuntu Server Amazon Machine Image (AMI).</li>
+            <li>Create new key pair for ssh login</li>
+            <li>Select t5.Large as the instance type with at least 25GiB of gp2 EBS.</li>
+            <li>For cost saving select spot instance pricing (if desired).</li>
+            <li>Configure a security group to allow inbound traffic on port 22 for SSH, port 8081 for Netflix, port 9000 for SonarQube,
+                and port 8080 for Jenkins.
+            </li>
+            <li>
+              <img src="images/ec2launch.jpg" style="width:50vw; height:auto;">
+            </li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 2: Connecting to the EC2 Instance</h5>
+          <ul style="list-style-type:none;">
+            <li>Once the instance is running, connect to it using SSH. You can use a tool like PuTTY (for Windows) or the terminal (for macOS/Linux) to establish a secure connection.</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 3: Clone Repository</h5>
+          <ul style="list-style-type:none;">
+            <li>The Github repo I used for this project was provided by "N4si" on Github "https://github.com/N4si/DevSecOps-Project"</li>
+            <li>while connected via SSH run "git clone https://github.com/N4si/DevSecOps-Project.git"</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 4: Configure Docker</h5>
+          <ul style="list-style-type:none;">
+            <li>Run the following commands in SSH terminal to update Ubuntu, install, and configure Docker</li>
+            <li>sudo apt-get update</li>
+            <li>sudo apt-get install docker.io -y</li>
+            <li>sudo usermod -aG docker $USER  # Replace with your system's username, e.g., 'ubuntu'</li>
+            <li>newgrp docker</li>
+            <li>sudo chmod 777 /var/run/docker.sock</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 5: TMDB API Key</h5>
+          <ul style="list-style-type:none;">
+            <li>Go to https://www.themoviedb.org and create an account</li>
+            <li>navigate to https://www.themoviedb.org/settings/api</li>
+            <li>Follow the Create App prompt</li>
+            <li>Once app is created, under the "Settings" menu on the left select "API"</li>
+            <li>Take note of the API Key listed</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 6: Build Docker Image</h5>
+          <ul style="list-style-type:none;">
+            <li>Run the following commands in SSH terminal to build Docker image using TMDB API Key argument</li>
+            <li>docker build --build-arg TMDB_V3_API_KEY=YOUR_API_KEY_HERE -t netflix .</li>
+            <li>docker run -d -p 8081:80 netflix:latest  #Run image as container</li>
+            <li>docker ps  # This will list running containers, netflix should be visible</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 7: Install SonarQube and Trivy for Security</h5>
+          <ul style="list-style-type:none;">
+            <li>Run the following commands in SSH terminal to install Trivy and SonarQube</li>
+            <li>docker run -d --name sonar -p 9000:9000 sonarqube:lts-community</li>
+            <li>wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -</li>
+            <li>echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list</li>
+            <li>sudo apt-get update</li>
+            <li>sudo apt-get install trivy</li>
+            <li>trivy image IMAGE_ID # Replace with your image ID to scan</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 8: Install Jenkins for Automation</h5>
+          <ul style="list-style-type:none;">
+            <li>Run the following commands in SSH terminal to install javaJDK and Jenkins</li>
+            <li>sudo apt update</li>
+            <li>sudo apt install fontconfig openjdk-17-jre</li>
+            <li>java -version
+                openjdk version "17.0.8" 2023-07-18
+                OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
+                OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
+            </li>
+            <li>sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+                https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+            </li>
+            <li>echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+                https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+                /etc/apt/sources.list.d/jenkins.list > /dev/null
+            </li>
+            <li>sudo apt-get update</li>
+            <li>sudo apt-get install jenkins</li>
+            <li>sudo systemctl start jenkins</li>
+            <li>sudo systemctl enable jenkins</li>
+            <li>sudo su</li>
+            <li>sudo usermod -aG docker jenkins</li>
+            <li>sudo systemctl restart jenkins</li>
+            <li>Access Jenkins via your browser using your EC2 publicIP:8080 to confirm success</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 9: Install Jenkins Plugins</h5>
+          <ul style="list-style-type:none;">
+            <li>Via the browser go to Jenkins>Plugins>Available Plugins</li>
+            <li>Install the below plugins</li>
+            <li>Eclipse Temurin Installer (Install without restart)</li>
+            <li>SonarQube Scanner (Install without restart)</li>
+            <li>NodeJs Plugin (Install Without restart)</li>
+            <li>Next configure Java and NodeJS in Tool Configuration</li>
+            <li>Goto Manage Jenkins>Tools>Add JDK>Install automatically>from adoptium.net name="jdk17" version 17.0.8.1+1> Click apply and save</li>
+            <li>Goto Manage Jenkins>Tools>Add NodeJS>Install automatically>from nodejs.org version(16.2.0) name="node17"> Click apply and save</li>
+            <li>It is important to keep the names given above due to a config file call.</li>
+            <li>
+              <img src="images/jenkins-plugin.jpg" style="width:50vw; height:auto;">
+            </li>
+            <li>Navigate to SonarQube using EC2 publicIP:9000</li>
+            <li>Goto Administration>Security>Tokens</li>
+            <li>
+              <img src="images/sq-tokens.jpg" style="width:50vw; height:auto;">
+            </li>
+            <li>Generate token named "jenkins"</li>
+            <li>Goto Jenkins Dashboard → Manage Jenkins → Credentials → Add Secret Text</li>
+            <li>Paste jenkins token and save</li>
+            <li>Goto Jenkins Dashboard → Manage Jenkins → Tools → Add SonarQube Scanner Installation</li>
+            <li>Name it sonar-scanner and use version 5.0.1.3006 then click apply and save</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 10: Install OWASP Dependency Checker</h5>
+          <ul style="list-style-type:none;">
+            <li>Goto Jenkins>Dashbaord>Manage Jenkins>Plugins>Available Plugins</li>
+            <li>Install OWASP Dependency checker without restart</li>
+            <li>Goto Jenkins>Dashbaord>Manage Jenkins>Tools>Dependency-Check installations</li>
+            <li>Add Dependency-Check</li>
+            <li>Name it "DP-Check", automatically install, using version 8.4.0 from github.com click apply and save</li>
+            <li>Goto Jenkins>Dashbaord>Manage Jenkins>Plugins>Available Plugins</li>
+            <li>Install the following Docker plugins</li>
+            <li>Docker, Docker Commons, Docker Pipeline, Docker API, docker-build-step</li>
+            <li>Goto Dashboard>Manage Jenkins>Credentials to add DockerHub authentication</li>
+            <li>Click System>Global Credentials>Add Credentials (on the left)</li>
+            <li>Add username and password from Dockerhub login (create Dockerhub account if you don't have one)</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 11: Build Ci/CD Pipeline</h5>
+          <ul style="list-style-type:none;">
+            <li>Goto your netflix project in Jenkins and click configure</li>
+            <li>Paste the following script in the Pipeline section. Make sure to add your TMDB API Key and replace my
+              Dockerhub username with your own.
+            </li>
+            <br/>
+            <li>
+              <h5>
+                pipeline{
+                    agent any
+                    tools{
+                        jdk 'jdk17'
+                        nodejs 'node16'
+                    }
+                    environment {
+                        SCANNER_HOME=tool 'sonar-scanner'
+                    }
+                    stages {
+                        stage('clean workspace'){
+                            steps{
+                                cleanWs()
+                            }
+                        }
+                        stage('Checkout from Git'){
+                            steps{
+                                git branch: 'main', url: 'https://github.com/N4si/DevSecOps-Project.git'
+                            }
+                        }
+                        stage("Sonarqube Analysis "){
+                            steps{
+                                withSonarQubeEnv('sonar-server') {
+                                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Netflix \
+                                    -Dsonar.projectKey=Netflix '''
+                                }
+                            }
+                        }
+                        stage("quality gate"){
+                           steps {
+                                script {
+                                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+                                }
+                            }
+                        }
+                        stage('Install Dependencies') {
+                            steps {
+                                sh "npm install"
+                            }
+                        }
+                        stage('OWASP FS SCAN') {
+                            steps {
+                                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                            }
+                        }
+                        stage('TRIVY FS SCAN') {
+                            steps {
+                                sh "trivy fs . > trivyfs.txt"
+                            }
+                        }
+                        stage("Docker Build & Push"){
+                            steps{
+                                script{
+                                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
+                                       sh "docker build --build-arg TMDB_V3_API_KEY=8028bdd4f2e3488139fe39b65eb4d2d6 -t netflix ."
+                                       sh "docker tag netflix chhupert91/netflix:latest "
+                                       sh "docker push chhupert91/netflix:latest "
+                                    }
+                                }
+                            }
+                        }
+                        stage("TRIVY"){
+                            steps{
+                                sh "trivy image chhupert91/netflix:latest > trivyimage.txt"
+                            }
+                        }
+                        stage('Deploy to container'){
+                            steps{
+                                sh 'docker run -d -p 8081:80 chhupert91/netflix:latest'
+                            }
+                        }
+                    }
+                }
+              </h5>
+            </li>
+            <br/>
+            <li>Click Build Now</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="resume-section">
+    <!-- Add more job sections as needed -->
+    <h2 style="color:#908e91;">Monitoring</h2>
+    <br/>
+    <div class="job">
+      <h2>Amazon Web Services EC2</h2>
+      <h5>Ubuntu OS /<small class="text-body-secondary">t2.Medium 25GiB gp2</small></h5>
+      <h5>App Monitoring Server</h5>
+      <br/>
+      <ul style="list-style-type:none;">
+        <li>
+          <h5>Step 12: Launching an AWS EC2 Instance</h5>
+          <ul style="list-style-type:none;">
+            <li>Log in to the AWS Management Console and navigate to the EC2 dashboard.</li>
+            <li>Click on the "Launch Instance" button and select an Ubuntu Server Amazon Machine Image (AMI).</li>
+            <li>For best practices, launch this instance in a different subnet from your app development server</li>
+            <li>Select t2.Medium as the instance type with at least 25GiB of gp2 EBS.</li>
+            <li>For cost saving select spot instance pricing (if desired).</li>
+            <li>Configure a new security group to allow inbound traffic on port 22 for SSH, port 9090 for Prometheus, port 9100
+              for Node Exporter, and port 3000 for Grafana.
+            </li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 13: Connecting to the EC2 Instance</h5>
+          <ul style="list-style-type:none;">
+            <li>Once the instance is running, connect to it using SSH. You can use a tool like PuTTY (for Windows) or the terminal (for macOS/Linux) to establish a secure connection.</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 3: Install Prometheus</h5>
+          <ul style="list-style-type:none;">
+            <li>Run the following commands in the SSH terminal</li>
+            <li>sudo useradd --system --no-create-home --shell /bin/false prometheus</li>
+            <li>wget https://github.com/prometheus/prometheus/releases/download/v2.47.1/prometheus-2.47.1.linux-amd64.tar.gz</li>
+            <li>tar -xvf prometheus-2.47.1.linux-amd64.tar.gz</li>
+            <li>cd prometheus-2.47.1.linux-amd64/</li>
+            <li>sudo mkdir -p /data /etc/prometheus</li>
+            <li>sudo mv prometheus promtool /usr/local/bin/</li>
+            <li>sudo mv consoles/ console_libraries/ /etc/prometheus/</li>
+            <li>sudo mv prometheus.yml /etc/prometheus/prometheus.yml</li>
+            <li>sudo chown -R prometheus:prometheus /etc/prometheus/ /data/</li>
+            <li>sudo nano /etc/systemd/system/prometheus.service</li>
+            <li># Add the following</li>
+            <li>
+              <h5>
+                [Unit]
+                Description=Prometheus
+                Wants=network-online.target
+                After=network-online.target
+
+                StartLimitIntervalSec=500
+                StartLimitBurst=5
+
+                [Service]
+                User=prometheus
+                Group=prometheus
+                Type=simple
+                Restart=on-failure
+                RestartSec=5s
+                ExecStart=/usr/local/bin/prometheus \
+                  --config.file=/etc/prometheus/prometheus.yml \
+                  --storage.tsdb.path=/data \
+                  --web.console.templates=/etc/prometheus/consoles \
+                  --web.console.libraries=/etc/prometheus/console_libraries \
+                  --web.listen-address=0.0.0.0:9090 \
+                  --web.enable-lifecycle
+
+                [Install]
+                WantedBy=multi-user.target
+              </h5></li>
+            <br/>
+            <li>sudo systemctl enable prometheus</li>
+            <li>sudo systemctl start prometheus</li>
+            <li>sudo systemctl status prometheus  # Confirm prometheus is runnning</li>
+            <li>Access Prometheus via your browser at your ec2 PublicIP:9090</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 14: Install Node Exporter</h5>
+          <ul style="list-style-type:none;">
+            <li>Run the following commands in the SSH terminal</li>
+            <li>sudo useradd --system --no-create-home --shell /bin/false node_exporter</li>
+            <li>wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz</li>
+            <li>tar -xvf node_exporter-1.6.1.linux-amd64.tar.gz</li>
+            <li>sudo mv node_exporter-1.6.1.linux-amd64/node_exporter /usr/local/bin/</li>
+            <li>rm -rf node_exporter*</li>
+            <li>sudo nano /etc/systemd/system/node_exporter.service</li>
+            <li>Add the following and save</li>
+            <br/>
+            <li>
+              <h5>
+                [Unit]
+                Description=Node Exporter
+                Wants=network-online.target
+                After=network-online.target
+
+                StartLimitIntervalSec=500
+                StartLimitBurst=5
+
+                [Service]
+                User=node_exporter
+                Group=node_exporter
+                Type=simple
+                Restart=on-failure
+                RestartSec=5s
+                ExecStart=/usr/local/bin/node_exporter --collector.logind
+
+                [Install]
+                WantedBy=multi-user.target
+              </h5>
+            </li>
+            <br/>
+            <li>sudo systemctl enable node_exporter</li>
+            <li>sudo systemctl start node_exporter</li>
+            <li>sudo systemctl status node_exporter # Confirm node exporter is working</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 15: Configure Prometheus Plugin</h5>
+          <ul style="list-style-type:none;">
+            <li>Run the following commands in the SSH terminal</li>
+            <li>cd prometheus-2.47.1.linux-amd64/etc/prometheus/</li>
+            <li>sudo nano prometheus.yml</li>
+            <li>Add the following to the file, replacing my IP's with the private IP's of your instances.</li>
+            <li>
+              <img src="images/prometheus-yml.jpg" style="width:60vw; height:auto;">
+            </li>
+            <br/>
+            <li>use commands ctrl+s and ctrl+x to save and exit the file</li>
+            <li>promtool check config /etc/prometheus/prometheus.yml # Checks proper yml syntax</li>
+            <li>curl -X POST http://localhost:9090/-/reload</li>
+            <br/>
+            <li>Access Prometheus via your publicIP:9090</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 16: Install / Configure Grafana</h5>
+          <ul style="list-style-type:none;">
+            <li>Run the following commands in the SSH / PuTTY terminal</li>
+            <li>sudo apt-get install -y apt-transport-https software-properties-common</li>
+            <li>wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -</li>
+            <li>echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list</li>
+            <li>sudo apt-get update</li>
+            <li>sudo apt-get -y install grafana</li>
+            <li>sudo systemctl enable grafana-server</li>
+            <li>sudo systemctl start grafana-server</li>
+            <li>sudo systemctl status grafana-server  # Confirm Grafana status</li>
+            <br/>
+            <li>Access Grafana via your publicIP:3000</li>
+            <br/>
+            <li>When you log in for the first time, Grafana will prompt you to change the default password for security reasons. Follow the prompts to set a new password.</li>
+            <li>Click on the gear icon (⚙) in the left sidebar to open the "Configuration" menu.</li>
+            <li>Select Data Sources > Add Data Source > Prometheus</li>
+            <li>Add http://localhost:9090 to the HTTP input and click Save & Test</li>
+            <br/>
+            <li>Import a pre-configured dashboard by clicking the "+" (plus) icon in the left sidebar to open the "Create" menu.</li>
+            <li>Goto Dashboard > Import > (enter dashboard code from https://grafana.com/grafana/dashboards/)</li>
+            <li>Select Prometheus as data source then click import</li>
+            <br/>
+            <li>You should now have a pre-configured dashboard available</li>
+            <li>
+              <img src="images/grafana-jenkins.jpg" style="width:60vw; height:auto;">
+            </li>
+            <br/>
+            <li>Once this is complete navigate back to Jenkins in your browser and install the Prometheus plugin</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <br/>
+    <h2 style="color:#908e91;">Container Orchestration</h2>
+    <br/>
+    <div class="job">
+      <h2>Amazon Web Services Elastic Kubernetes Service (EKS)</h2>
+      <h5>Ubuntu OS /<small class="text-body-secondary">t3.Medium 25GiB gp2 EBS</small></h5>
+      <h5>EKS Instance Node Group</h5>
+      <br/>
+      <ul style="list-style-type:none;">
+        <li>
+          <h5>Step 17: Create Kubernetes Cluster</h5>
+          <ul style="list-style-type:none;">
+            <li>In AWS navigate to EKS dashboard and select Add Cluster</li>
+            <li>Create an IAM Role with the 'AmazonEKSClusterPolicy' attached</li>
+            <li>You may need to remove us-east-1a subnet to deploy cluster (this sn seems to be full frequently)</li>
+            <li>Configure a security group to open port 3000 for Grafana, 9100 for Node Exporter, and 30007 for ELB</li>
+            <li>Use default add-ons</li>
+            <li>Once created, navigate to your EKS cluster, then to the Compute tab</li>
+            <li>Click Add Node Group and name it 'nodes'</li>
+            <li>Create an IAM role with the following policies attached:</li>
+            <li>AmazonEBSCSIDriverPolicy, AmazonEC2ContainerRegistryReadOnly, AmazonEKD_CNI_Policy, AmazonEKSWorkerNodePolicy</li>
+            <li>To reduce costs, set minimum and maximum number of nodes to 1</li>
+            <li>Remove the two subnets your dev and monitoring servers are deployed in</li>
+            <li>Click Create</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 18: Install Node Exporter using Helm</h5>
+          <ul style="list-style-type:none;">
+            <li>Using your local CMD install Helm (if not already installed) and run the following commands</li>
+            <li>Note: you may also need to install kubectl</li>
+            <li>helm repo add prometheus-community https://prometheus-community.github.io/helm-charts</li>
+            <li>kubectl create namespace prometheus-node-exporter</li>
+            <li>helm install prometheus-node-exporter prometheus-community/prometheus-node-exporter --namespace prometheus-node-exporter</li>
+            <li>restart Prometheus by using your monitoring server's PuTTY / SSH terminal</li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 19: Install ArgoCD</h5>
+          <ul style="list-style-type:none;">
+            <li>Using your local CMD run the following commands</li>
+            <li>Note: you may need to install aws cli locally</li>
+            <li>aws eks update-kubeconfig --name Netflix --region us-east-1</li>
+            <li>kubectl get ns #ping</li>
+            <li>kubectol get pods #checking no pods exists</li>
+            <li>kubectl create namespace argocd</li>
+            <li>kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.7/manifests/install.yaml</li>
+            <br/>
+            <li><h5>Switch to Powershell</h5></li>
+            <li>run > kubectl patch svc argocd-server -n argocd -p '{\"spec\": {\"type\": \"LoadBalancer\"}}'</li>
+            <br/>
+            <li>Switch back to local CMD</li>
+            <li>kubectl get svc -n argocd</li>
+            <li>kubectl get svc argocd-server -n argocd -o json | jq --raw-output ".status.loadBalancer.ingress[0].hostname"</li>
+            <li>copy output, this is your host endpoint name</li>
+            <br/>
+            <li>Because Windows does not have Base64 decoder, run the following commands to obtain ArgoCD initial login secret</li>
+            <li>kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}"</li>
+            <li>save output in a text file as 'ARGO_PWD.txt'</li>
+            <li>using certutil run the following to decode</li>
+            <li>certutil -decode ARGO_PWD.txt DECODED.txt</li>
+            <li>Open DECODED.txt and copy to password</li>
+            <br/>
+            <li>Login to ArgoCD at YOUR_COPIED_ENDPOINT by using username: 'admin' password: (what you copied from decoded.txt)</li>
+            <li>Click the gear icon (⚙) on the left hand side, then Repositories >Connect Repo Using HTTPS</li>
+            <li>Select type 'git', Project=default, URL='https://github.com/N4si/DevSecOps-Project.git', then click Connect</li>
+            <li>Click Manage Apps on the left side of the page, then select New App</li>
+            <li>App Name='netflix', Project Name='default', sync Policy='automatic', Repo URL='https://github.com/N4si/DevSecOps-Project.git'</li>
+            <li>Path='Kubernetes', Namespace='default'</li>
+            <li>Click Sync, then Force</li>
+            <br/>
+            <li>
+              <img src="images/argo.PNG" style="width:60vw; height:auto;">
+            </li>
+          </ul>
+        </li>
+        <br/>
+        <li>
+          <h5>Step 20: Finishing Up</h5>
+          <ul style="list-style-type:none;">
+            <li>Navigate back to Grafana in your browser and add a Kubernetes dashboard using the same method as before</li>
+            <li>
+              <img src="images/grafana.PNG" style="width:60vw; height:auto;">
+            </li>
+            <br/>
+            <li>Navigate to your EKS node publiIP:300007</li>
+            <li>You have successfully deployed a Netflix clone on Kubernetes in AWS :]</li>
+            <li>
+              <img src="images/ntflx.PNG" style="width:60vw; height:auto;">
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Skills section -->
+  <section class="resume-section">
+    <h2 style="color:#908e91;">Technical Proficiencies Utilized</h2>
+    <ul class="skill-list">
+      <li class="skill-item">AWS</li>
+      <li class="skill-item">Docker</li>
+      <li class="skill-item">Kubernetes</li>
+      <li class="skill-item">YAML</li>
+      <li class="skill-item">PuTTY</li>
+      <li class="skill-item">Linux Terminal</li>
+      <li class="skill-item">Prometheus</li>
+      <li class="skill-item">Grafana</li>
+      <li class="skill-item">Jenkins</li>
+      <li class="skill-item">SonarQube</li>
+      <li class="skill-item">Trivy</li>
+      <!-- Add more skills as needed -->
+    </ul>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+
+</body>
+</html>
